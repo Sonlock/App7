@@ -1,48 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Mi explorador web</title>
-	<style>
-		form {
-			width: 80%;
-			margin: 0 auto;
-			padding: 20px;
-			background-color: #f2f2f2;
-			border-radius: 10px;
-		}
-
-		input[type="text"] {
-			width: 80%;
-			padding: 12px 20px;
-			margin: 8px 0;
-			box-sizing: border-box;
-			border: none;
-			border-radius: 4px;
-		}
-
-		input[type="submit"] {
-			background-color: #4CAF50;
-			color: white;
-			padding: 14px 20px;
-			margin: 8px 0;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-		}
-	</style>
+  <meta charset="utf-8">
+  <title>Mapa con ubicación actual y marcadores</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Incluimos los archivos CSS de Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha384-YjlNnzj1C8onavx33myvFeZ0tvhZBjKsz/1+gNJv0e5Jjz5hS8InQ5z5+qj/PfEo" crossorigin=""/>
+  <!-- Incluimos los archivos JS de Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha384-wn2BbUKzxd6VfUrvTzU6krC+jpT1T9djLWnLz94JNh75mTLjpMcn0eg7IeO/lAJH" crossorigin=""></script>
+  <style>
+    #map {
+      height: 400px;
+    }
+  </style>
 </head>
 <body>
-	<form>
-		<input type="text" name="url" placeholder="Ingrese una URL">
-		<input type="submit" value="Ir">
-	</form>
-	<script>
-		const form = document.querySelector('form');
-		form.addEventListener('submit', (event) => {
-			event.preventDefault();
-			const url = document.querySelector('input[name="url"]').value;
-			window.location.href = url;
-		});
-	</script>
+  <div id="map"></div>
+  <button id="add-circle">Agregar círculo</button>
+  <button id="add-x">Agregar X</button>
+
+  <script>
+    var map = L.map('map').setView([0, 0], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 19
+    }).addTo(map);
+
+    function onLocationFound(e) {
+      var radius = e.accuracy / 2;
+
+      L.marker(e.latlng).addTo(map).bindPopup("You are here!").openPopup();
+      var icon = L.icon({
+        iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Red_X.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+      });
+      var marker = L.marker(e.latlng, {icon: icon}).addTo(map);
+    }
+
+    function onLocationError(e) {
+      alert(e.message);
+    }
+
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+
+    map.locate({setView: true, maxZoom: 16});
+
+    document.getElementById('add-circle').addEventListener('click', function() {
+      var circle = L.circle(map.getCenter(), {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500
+      }).addTo(map);
+    });
+
+    document.getElementById('add-x').addEventListener('click', function() {
+      var icon = L.icon({
+        iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8d/Red_X.png',
+iconSize: [25, 41],
+iconAnchor: [12, 41],
+popupAnchor: [1, -34],
+tooltipAnchor: [16, -28],
+});
+var marker = L.marker(map.getCenter(), {icon: icon}).addTo(map);
+});
+</script>
+
 </body>
 </html>
