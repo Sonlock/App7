@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Mi explorador web</title>
+	<style>
+		form {
+			width: 80%;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: #f2f2f2;
+			border-radius: 10px;
+		}
+
+		input[type="text"] {
+			width: 80%;
+			padding: 12px 20px;
+			margin: 8px 0;
+			box-sizing: border-box;
+			border: none;
+			border-radius: 4px;
+		}
+
+		input[type="submit"] {
+			background-color: #4CAF50;
+			color: white;
+			padding: 14px 20px;
+			margin: 8px 0;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<form>
+		<input type="text" name="url" placeholder="Ingrese una URL">
+		<input type="submit" value="Ir">
+	</form>
+	<script>
+		const form = document.querySelector('form');
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			const url = document.querySelector('input[name="url"]').value;
+			window.location.href = url;
+		});
+	</script>
+</body>
+</html>
